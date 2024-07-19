@@ -50,7 +50,7 @@ function CreateProject() {
         } catch (error) {
             // Xử lý lỗi nếu request thất bại
             console.error('Error creating project:', error);
-            alert('Đã xảy ra lỗi khi tạo dự án.');
+            alert('Đã xảy ra lỗi khi tạo dự án.', error?.message);
         }
     };
 
