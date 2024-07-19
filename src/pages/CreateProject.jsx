@@ -38,7 +38,7 @@ function CreateProject() {
             // Thêm ảnh vào FormData nếu có
 
             // Thực hiện request POST tới API
-            const response = await axios.post('http://localhost:3000/createXdndProject', formData, {
+            const response = await axios.post('https://f-home-be.vercel.app/createXdndProject', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data' // Đặt header 'Content-Type' là 'multipart/form-data' cho FormData
                 }
