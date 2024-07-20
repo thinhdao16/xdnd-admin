@@ -18,6 +18,13 @@ function CreateProject() {
     const [types, setTypes] = useState()
     const handleCreateXdndProject = async () => {
         try {
+            if (!landArea || !title || !description || !costConstruction || !location || !totalArea || !typeConstruction || !year || !types || images.length === 0) {
+                alert('Làm ơn điền đầy đủ');
+                return;
+            }
+            const arrayImg = images?.map((imgs) => imgs?.file)
+            console.log(arrayImg)
+
             // Tạo một đối tượng FormData
             const formData = new FormData();
 
@@ -31,14 +38,11 @@ function CreateProject() {
             formData.append('typeConstruction', typeConstruction);
             formData.append('year', year);
             formData.append('type', types);
-            for (let i = 0; i < images.length; i++) {
-                console.log(images)
-                formData.append('img', images[i].file);
+            for (let i = 0; i < arrayImg.length; i++) {
+                formData.append('img', arrayImg[i]);
             }
-            // Thêm ảnh vào FormData nếu có
 
-            // Thực hiện request POST tới API
-            const response = await axios.post('https://f-home-be.vercel.app/createXdndProject', formData, {
+            const response = await axios.post('http://localhost:3000/createXdndProject', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data' // Đặt header 'Content-Type' là 'multipart/form-data' cho FormData
                 }
