@@ -244,184 +244,186 @@ function Construction() {
                     height={800}
                     footer={null}
                 >
-                    <div className="flex flex-col gap-4">
-                        {/* Form Default */}
-                        <div>
-                            <label htmlFor="title" className="text-sm text-gray-600">
-                                Tiêu đề
-                            </label>
-                            <input
-                                id="title"
-                                type="text"
-                                name="title"
-                                value={formFields?.title}
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-                            />
-                        </div>  <div>
-                            <label htmlFor="description" className="text-sm text-gray-600">
-                                Nội dung
-                            </label>
-                            <input
-                                id="description"
-                                type="text"
-                                name="description"
-                                value={formFields?.description}
+                    <Spin spinning={loading} tip="Loading...">
+                        <div className="flex flex-col gap-4">
+                            {/* Form Default */}
+                            <div>
+                                <label htmlFor="title" className="text-sm text-gray-600">
+                                    Tiêu đề
+                                </label>
+                                <input
+                                    id="title"
+                                    type="text"
+                                    name="title"
+                                    value={formFields?.title}
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+                                />
+                            </div>  <div>
+                                <label htmlFor="description" className="text-sm text-gray-600">
+                                    Nội dung
+                                </label>
+                                <input
+                                    id="description"
+                                    type="text"
+                                    name="description"
+                                    value={formFields?.description}
 
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="landArea" className="text-sm text-gray-600">
-                                Diện tích đất
-                            </label>
-                            <input
-                                id="landArea"
-                                type="text"
-                                name="landArea"
-                                value={formFields?.landArea}
-
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="costConstruction" className="text-sm text-gray-600">
-                                Chi phí thi công
-                            </label>
-                            <input
-                                id="costConstruction"
-                                type="text"
-                                name="costConstruction"
-                                value={formFields?.costConstruction}
-
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-
-                            />
-                        </div>    <div>
-                            <label htmlFor="location" className="text-sm text-gray-600">
-                                Địa điểm
-                            </label>
-                            <input
-                                id="location"
-                                type="text"
-                                name="location"
-                                value={formFields?.location}
-
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-
-                            />
-                        </div>    <div>
-                            <label htmlFor="totalArea" className="text-sm text-gray-600">
-                                Tổng diện tích sàn
-                            </label>
-                            <input
-                                id="totalArea"
-                                type="text"
-                                name="totalArea"
-                                value={formFields?.totalArea}
-
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-
-                            />
-                        </div>    <div>
-                            <label htmlFor="typeConstruction" className="text-sm text-gray-600">
-                                Loại công trình
-                            </label>
-                            <input
-                                id="typeConstruction"
-                                type="text"
-                                name="typeConstruction"
-                                value={formFields?.typeConstruction}
-
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-
-                            />
-                        </div>    <div>
-                            <label htmlFor="year" className="text-sm text-gray-600">
-                                Năm thiết kế
-                            </label>
-                            <input
-                                id="year"
-                                type="text"
-                                name="year"
-                                value={formFields?.year}
-
-                                className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Default Input"
-                                onChange={handleInputChange}
-
-                            />
-                        </div>
-                        <div class="">
-                            <label htmlFor="types" className="text-sm text-gray-600">
-                                Loại dự án
-                            </label>
-                            <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                name="types"
-                                value={formFields?.types}
-                                onChange={handleInputChange}
-                            >
-                                <option value="" selected>Chọn loại dự án</option>
-                                <option value="design">Các thiết kế</option>
-                                <option value="construction">Công trình thực tế</option>
-                            </select>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="defaultInput" className="text-sm text-gray-600">
-                                Hình ảnh hiện tại
-                            </label>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                                {dataItemImgs?.map((dataImg) => (
-                                    <div key={dataImg} className="image-wrapper relative">
-                                        <img src={dataImg} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
-                                        <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 shadow-2xl flex items-center justify-center " onClick={() => handleRemoveImage("old-img", dataImg)}><CiTrash /></button>
-                                    </div>
-                                ))}
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+                                />
                             </div>
-                            <label htmlFor="defaultInput" className="text-sm text-gray-600">
-                                Hình ảnh mới
-                            </label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                onChange={handleImageChange}
-                            />
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3  gap-4">
-                                {images.map((image) => (
-                                    <div key={image.id} className="image-wrapper relative">
-                                        <img src={image.id} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
-                                        <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 flex items-center justify-center shadow-2xl  " onClick={() => handleRemoveImage("new-img", image.id)}><CiTrash /></button>
-                                    </div>
-                                ))}
+                            <div>
+                                <label htmlFor="landArea" className="text-sm text-gray-600">
+                                    Diện tích đất
+                                </label>
+                                <input
+                                    id="landArea"
+                                    type="text"
+                                    name="landArea"
+                                    value={formFields?.landArea}
+
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="costConstruction" className="text-sm text-gray-600">
+                                    Chi phí thi công
+                                </label>
+                                <input
+                                    id="costConstruction"
+                                    type="text"
+                                    name="costConstruction"
+                                    value={formFields?.costConstruction}
+
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+
+                                />
+                            </div>    <div>
+                                <label htmlFor="location" className="text-sm text-gray-600">
+                                    Địa điểm
+                                </label>
+                                <input
+                                    id="location"
+                                    type="text"
+                                    name="location"
+                                    value={formFields?.location}
+
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+
+                                />
+                            </div>    <div>
+                                <label htmlFor="totalArea" className="text-sm text-gray-600">
+                                    Tổng diện tích sàn
+                                </label>
+                                <input
+                                    id="totalArea"
+                                    type="text"
+                                    name="totalArea"
+                                    value={formFields?.totalArea}
+
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+
+                                />
+                            </div>    <div>
+                                <label htmlFor="typeConstruction" className="text-sm text-gray-600">
+                                    Loại công trình
+                                </label>
+                                <input
+                                    id="typeConstruction"
+                                    type="text"
+                                    name="typeConstruction"
+                                    value={formFields?.typeConstruction}
+
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+
+                                />
+                            </div>    <div>
+                                <label htmlFor="year" className="text-sm text-gray-600">
+                                    Năm thiết kế
+                                </label>
+                                <input
+                                    id="year"
+                                    type="text"
+                                    name="year"
+                                    value={formFields?.year}
+
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={handleInputChange}
+
+                                />
+                            </div>
+                            <div class="">
+                                <label htmlFor="types" className="text-sm text-gray-600">
+                                    Loại dự án
+                                </label>
+                                <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    name="types"
+                                    value={formFields?.types}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="" selected>Chọn loại dự án</option>
+                                    <option value="design">Các thiết kế</option>
+                                    <option value="construction">Công trình thực tế</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="defaultInput" className="text-sm text-gray-600">
+                                    Hình ảnh hiện tại
+                                </label>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                                    {dataItemImgs?.map((dataImg) => (
+                                        <div key={dataImg} className="image-wrapper relative">
+                                            <img src={dataImg} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
+                                            <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 shadow-2xl flex items-center justify-center " onClick={() => handleRemoveImage("old-img", dataImg)}><CiTrash /></button>
+                                        </div>
+                                    ))}
+                                </div>
+                                <label htmlFor="defaultInput" className="text-sm text-gray-600">
+                                    Hình ảnh mới
+                                </label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleImageChange}
+                                />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3  gap-4">
+                                    {images.map((image) => (
+                                        <div key={image.id} className="image-wrapper relative">
+                                            <img src={image.id} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
+                                            <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 flex items-center justify-center shadow-2xl  " onClick={() => handleRemoveImage("new-img", image.id)}><CiTrash /></button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+
+
+                            <div className="mt-6 flex flex-row gap-4">
+                                <button className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm"
+                                    onClick={() => handleEdit()}
+                                >
+                                    Sửa dự án
+                                </button>
+
                             </div>
                         </div>
-
-
-
-                        <div className="mt-6 flex flex-row gap-4">
-                            <button className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm"
-                                onClick={() => handleEdit()}
-                            >
-                                Sửa dự án
-                            </button>
-
-                        </div>
-                    </div>
+                    </Spin>
                 </Modal>
 
             </main>

@@ -63,12 +63,12 @@ function CreateProject() {
             // Xử lý kết quả từ API nếu cần
             console.log(response.data);
             setLoading(false)
-            alert('Dự án đã được tạo thành công!');
+            message.success('Dự án đã được tạo thành công!');
         } catch (error) {
             // Xử lý lỗi nếu request thất bại
             console.error('Error creating project:', error);
             setLoading(false)
-            alert('Đã xảy ra lỗi khi tạo dự án.', error?.message);
+            message.error('Đã xảy ra lỗi khi tạo dự án.', error?.message);
         }
     };
 
