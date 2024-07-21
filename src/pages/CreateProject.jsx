@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { CiTrash } from "react-icons/ci";
-import { Spin } from "antd";
+import { message, Spin } from "antd";
 import { useOutletContext } from "react-router-dom";
 import Navbar from "../components/Navbar/Index";
 
@@ -26,8 +26,12 @@ function CreateProject() {
     const handleCreateXdndProject = async () => {
         try {
             if (!landArea || !title || !description || !costConstruction || !location || !totalArea || !typeConstruction || !year || !types || images.length === 0) {
-                alert('Làm ơn điền đầy đủ');
+                message.error("Hãy điển đầy đủ thông tin")
                 return;
+            }
+            if (images.length > 10) {
+                message.error("Làm ơn chọn dưới 10 ảnh")
+                return
             }
             setLoading(true)
 

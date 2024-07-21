@@ -16,7 +16,10 @@ function LoginIndex() {
     // Danh sách các cặp email và mật khẩu hợp lệ
     const validCredentials = [
       { email: "admin", password: "admin@xdnd123" },
+      { email: "Admin", password: "Admin@xdnd123" },
+      { email: "admin", password: "Admin@xdnd123" },
       { email: "Admin", password: "Admin@xdnd123" }
+
     ];
 
     // Kiểm tra xem cặp email và mật khẩu có tồn tại trong danh sách hợp lệ không

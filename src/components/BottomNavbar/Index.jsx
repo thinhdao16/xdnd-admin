@@ -2,7 +2,6 @@ import {
   faHardHat,
   faMagic,
   faPlusCircle,
-  faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useMemo, useState } from "react";
