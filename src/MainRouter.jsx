@@ -1,55 +1,54 @@
-import React from 'react'
-import { useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Table from './pages/Table';
+import AuthLayout from './components/Layout/AuthLayout';
+import GuestLayout from './components/Layout/GuestLayout';
+import Login from './pages/auth/Login';
+import Blank from './pages/Blank';
+import NotFound from './pages/NotFound';
+import Form from './pages/Form';
+import RegisterIndex from './pages/auth/Register';
+import CreateProject from './pages/CreateProject';
+import { useAuthContext } from './context/AuthContext';
+import Construction from './pages/Construction';
 
-import Dashboard from "./pages/Dashboard";
-import Table from "./pages/Table";
-import AuthLayout from "./components/Layout/AuthLayout";
-import GuestLayout from "./components/Layout/GuestLayout";
-import Login from "./pages/auth/Login";
-import Blank from "./pages/Blank";
-import NotFound from "./pages/NotFound";
-import Form from "./pages/Form";
-import RegisterIndex from "./pages/auth/Register";
-import CreateProject from "./pages/CreateProject";
-import { useAuthContext } from "./context/AuthContext";
-import Construction from "./pages/Construction";
 function MainRouter(props) {
-    const [checkAccessToken, setCheckAccessToken] = useState("");
-    const { refeshLogin } = useAuthContext()
+    const [checkAccessToken, setCheckAccessToken] = useState(null);
+    const { refeshLogin } = useAuthContext();
+
     useEffect(() => {
-        const accessToken = localStorage.getItem("token");
+        const accessToken = localStorage.getItem('token');
         setCheckAccessToken(accessToken);
-    }, [refeshLogin])
+    }, [refeshLogin]);
+
     return (
         <Routes>
-            {checkAccessToken === null ? (
+            {checkAccessToken ? (
                 <>
-                    <Route path="*" element={<Navigate to="/auth/login" />} />
-                    <Route path="/auth" element={<GuestLayout />}>
-                        <Route path="/auth/login" element={<Login />}></Route>
-                        <Route path="/auth/register" element={<RegisterIndex />}></Route>
+                    <Route path="/" element={<AuthLayout />}>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/table" element={<Table />} />
+                        <Route path="/create-project" element={<CreateProject />} />
+                        <Route path="/blank" element={<Blank />} />
+                        <Route path="/construction" element={<Construction />} />
+                        <Route path="/404" element={<NotFound />} />
+                        <Route path="/form" element={<Form />} />
+                        <Route path="/profile" element={<Blank />} />
                     </Route>
+                    <Route path="*" element={<Navigate to="/" />} />
                 </>
             ) : (
                 <>
-                    <Route path="/" element={<AuthLayout />}>
-                        <Route path="/" element={<Dashboard />}></Route>
-                        <Route path="/table" element={<Table />}></Route>
-                        <Route path="/create-project" element={<CreateProject />}></Route>
-                        <Route path="/blank" element={<Blank />}></Route>
-                        <Route path="/construction" element={<Construction />}></Route>
-
-                        <Route path="/404" element={<NotFound />}></Route>
-                        <Route path="/form" element={<Form />}></Route>
-                        <Route path="/profile" element={<Blank />}></Route>
+                    <Route path="*" element={<Navigate to="/auth/login" />} />
+                    <Route path="/auth" element={<GuestLayout />}>
+                        <Route path="/auth/login" element={<Login />} />
+                        <Route path="/auth/register" element={<RegisterIndex />} />
                     </Route>
                 </>
-            )
-            }
+            )}
         </Routes>
-    )
+    );
 }
 
-
-export default MainRouter
+export default MainRouter;
