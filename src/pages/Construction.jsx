@@ -81,7 +81,7 @@ function Construction() {
                 groupImg = [...groupImg, ...uploadResponse.data.data.postings.img];
             }
             const responseEdit = await axios.put(
-                `https://f-home-be.vercel.app/edit-xdnd-project/${dataItem?._id}`,
+                `https://fhomebe.onrender.com/edit-xdnd-project/${dataItem?._id}`,
                 {
                     title: formFields?.title,
                     description: formFields?.description,

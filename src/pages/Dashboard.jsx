@@ -73,7 +73,7 @@ function Dashboard() {
         const formData = new FormData();
         images.map((img) => formData.append('img', img.file));
         const uploadResponse = await axios.post(
-          'https://f-home-be.vercel.app/createXdndProject',
+          'https://fhomebe.onrender.com/createXdndProject',
           formData, {
           headers: {
             'Content-Type': 'multipart/form-data' // Đặt header 'Content-Type' là 'multipart/form-data' cho FormData
