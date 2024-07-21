@@ -1,7 +1,7 @@
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { message } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../context/AuthContext";
 
@@ -11,18 +11,14 @@ function LoginIndex() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setRefeshLogin } = useAuthContext()
+  const { refeshLogin, setRefeshLogin } = useAuthContext()
   const isValidCredentials = (email, password) => {
-    // Danh sách các cặp email và mật khẩu hợp lệ
     const validCredentials = [
       { email: "admin", password: "admin@xdnd123" },
       { email: "Admin", password: "Admin@xdnd123" },
       { email: "admin", password: "Admin@xdnd123" },
       { email: "Admin", password: "Admin@xdnd123" }
-
     ];
-
-    // Kiểm tra xem cặp email và mật khẩu có tồn tại trong danh sách hợp lệ không
     return validCredentials.some(cred => cred.email === email && cred.password === password);
   };
 
@@ -40,6 +36,16 @@ function LoginIndex() {
       message.error("Hãy nhập đúng tài khoản, mật khẩu");
     }
   };
+  const checkAccessToken = async () => {
+    const accessToken = localStorage.getItem("token");
+    if (accessToken) {
+      navigate("/");
+    }
+  };
+
+  useEffect(() => {
+    checkAccessToken();
+  }, [refeshLogin]);
 
   const LoginImage =
     "https://static.vecteezy.com/system/resources/previews/019/872/884/non_2x/3d-minimal-user-login-page-user-authentication-concept-user-verification-concept-login-page-with-a-fingerprint-padlock-3d-illustration-free-png.png";

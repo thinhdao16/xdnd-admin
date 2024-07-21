@@ -14,17 +14,17 @@ import { useAuthContext } from './context/AuthContext';
 import Construction from './pages/Construction';
 
 function MainRouter(props) {
-    const [checkAccessToken, setCheckAccessToken] = useState(null);
+    const [checkAccessToken, setCheckAccessToken] = useState('');
     const { refeshLogin } = useAuthContext();
 
     useEffect(() => {
         const accessToken = localStorage.getItem('token');
         setCheckAccessToken(accessToken);
     }, [refeshLogin]);
-
+    console.log(checkAccessToken)
     return (
         <Routes>
-            {checkAccessToken ? (
+            {checkAccessToken !== null ? (
                 <>
                     <Route path="/" element={<AuthLayout />}>
                         <Route path="/" element={<Dashboard />} />
@@ -35,8 +35,12 @@ function MainRouter(props) {
                         <Route path="/404" element={<NotFound />} />
                         <Route path="/form" element={<Form />} />
                         <Route path="/profile" element={<Blank />} />
+                        <Route path="/auth" element={<GuestLayout />}>
+                            <Route path="/auth/login" element={<Login />} />
+                            <Route path="/auth/register" element={<RegisterIndex />} />
+                        </Route>
                     </Route>
-                    <Route path="*" element={<Navigate to="/" />} />
+                    {/* <Route path="*" element={<Navigate to="/" />} /> */}
                 </>
             ) : (
                 <>
