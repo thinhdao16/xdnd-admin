@@ -1,16 +1,16 @@
-import { faPage4, faWindows } from "@fortawesome/free-brands-svg-icons";
 import {
-  faTachometer,
-  faTable,
-  faLock,
-  faNoteSticky,
-  faNotdef
+  faTachometer
 } from "@fortawesome/free-solid-svg-icons";
 
 const initMenu = [
   {
-    label: "Dashboard",
+    label: "Các thiết kế",
     path: "/",
+    icon: faTachometer,
+  },
+  {
+    label: "Các dự án",
+    path: "/construction",
     icon: faTachometer,
   },
   {
@@ -19,44 +19,42 @@ const initMenu = [
     icon: faTachometer,
   },
 
-  {
-    label: "Blank",
-    path: "/blank",
-    icon: faPage4,
-  },
-  {
-    label: "404",
-    path: "/404",
-    icon: faNotdef,
-  },
+  // {
+  //   label: "Blank",
+  //   path: "/blank",
+  //   icon: faPage4,
+  // },
+  // {
+  //   label: "404",
+  //   path: "/404",
+  //   icon: faNotdef,
+  // },
 
-  {
-    label: 'Tabel dan Form'
-  },
-  {
-    label: "Form",
-    path: "/form",
-    icon: faWindows,
-  },
-  {
-    label: "Tabel",
-    path: "/table",
-    icon: faTable,
-  },
+  // {
+  //   label: 'Tabel dan Form'
+  // },
+  // {
+  //   label: "Form",
+  //   path: "/form",
+  //   icon: faWindows,
+  // },
+  // {
+  //   label: "Tabel",
+  //   path: "/table",
+  //   icon: faTable,
+  // },
 
-  {
-    label: 'Otentikasi'
-  },
-  {
-    label: "Login",
-    path: "/auth/login",
-    icon: faLock,
-  },
-  {
-    label: "Register",
-    path: "/auth/register",
-    icon: faNoteSticky,
-  },
+
+  // {
+  //   label: "Login",
+  //   path: "/auth/login",
+  //   icon: faLock,
+  // },
+  // {
+  //   label: "Register",
+  //   path: "/auth/register",
+  //   icon: faNoteSticky,
+  // },
 ];
 
 export default initMenu

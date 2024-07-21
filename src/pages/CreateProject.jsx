@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar/Index";
-import { useOutletContext } from "react-router-dom";
 import axios from "axios";
+import { CiTrash } from "react-icons/ci";
+import { Spin } from "antd";
+import { useOutletContext } from "react-router-dom";
+import Navbar from "../components/Navbar/Index";
 
 function CreateProject() {
+
     const [sidebarToggle] = useOutletContext();
+
+
     const [images, setImages] = useState([]);
     const [landArea, setLandArea] = useState();
     const [title, setTitle] = useState();
@@ -16,14 +21,17 @@ function CreateProject() {
     const [typeConstruction, setTypeConstruction] = useState()
     const [year, setYear] = useState()
     const [types, setTypes] = useState()
+    const [loading, setLoading] = useState(false)
+
     const handleCreateXdndProject = async () => {
         try {
             if (!landArea || !title || !description || !costConstruction || !location || !totalArea || !typeConstruction || !year || !types || images.length === 0) {
                 alert('Làm ơn điền đầy đủ');
                 return;
             }
+            setLoading(true)
+
             const arrayImg = images?.map((imgs) => imgs?.file)
-            console.log(arrayImg)
 
             // Tạo một đối tượng FormData
             const formData = new FormData();
@@ -50,10 +58,12 @@ function CreateProject() {
 
             // Xử lý kết quả từ API nếu cần
             console.log(response.data);
+            setLoading(false)
             alert('Dự án đã được tạo thành công!');
         } catch (error) {
             // Xử lý lỗi nếu request thất bại
             console.error('Error creating project:', error);
+            setLoading(false)
             alert('Đã xảy ra lỗi khi tạo dự án.', error?.message);
         }
     };
@@ -76,12 +86,15 @@ function CreateProject() {
 
     return (
         <>
+            <Navbar toggle={sidebarToggle} />
+
+            <Spin spinning={loading} fullscreen />
+
             <main className="h-full">
-                <Navbar toggle={sidebarToggle} />
 
                 {/* Main Content */}
                 <div className="mainCard">
-                    <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
+                    <div className="border w-full border-gray-200 bg-white pt-4 pb-20 px-6 rounded-md">
                         <div className="flex flex-col gap-4">
                             {/* Form Default */}
                             <div>
@@ -219,11 +232,11 @@ function CreateProject() {
                                     multiple
                                     onChange={handleImageChange}
                                 />
-                                <div className="grid grid-cols-3  gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3  gap-4">
                                     {images.map((image) => (
                                         <div key={image.id} className="image-wrapper relative">
-                                            <img src={image.id} alt="Uploaded Preview" className="shadow-lg rounded-3xl" />
-                                            <button className="absolute top-2 right-4 rounded-full bg-white w-8 h-8 shadow-2xl " onClick={() => handleRemoveImage(image.id)}>X</button>
+                                            <img src={image.id} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
+                                            <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 flex items-center justify-center shadow-2xl " onClick={() => handleRemoveImage(image.id)}><CiTrash /></button>
                                         </div>
                                     ))}
                                 </div>

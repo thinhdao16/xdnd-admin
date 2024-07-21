@@ -1,10 +1,10 @@
-import { faBars, faBell, faMessage } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 function Index({ toggle }) {
   const avatar =
-    "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80";
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOE3OVAuB3K_EF17rJvYBLOm7kE-FwEWmtRQ&s";
 
   return (
     <>
@@ -18,7 +18,7 @@ function Index({ toggle }) {
             </div>
             <div className="">
               <ul className="flex flex-row gap-4 items-center">
-                <li>
+                {/* <li>
                   <span className="h-9 w-9 cursor-pointer text-gray-600">
                     <FontAwesomeIcon icon={faMessage} />
                   </span>
@@ -27,7 +27,7 @@ function Index({ toggle }) {
                   <span className="h-9 w-9 cursor-pointer text-gray-600">
                     <FontAwesomeIcon icon={faBell} />
                   </span>
-                </li>
+                </li> */}
                 <li>
                   <span>
                     <img

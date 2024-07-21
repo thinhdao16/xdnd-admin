@@ -1,9 +1,8 @@
 import {
-  faBell,
-  faHome,
-  faMessage,
+  faHardHat,
+  faMagic,
+  faPlusCircle,
   faSignOut,
-  faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useMemo, useState } from "react";
@@ -15,29 +14,29 @@ function Index() {
   const menus = useMemo(
     () => [
       {
-        label: "Home",
-        icon: faHome,
+        label: "Design",
+        icon: faMagic,
         link: "/",
         dis: "translate-x-0",
       },
       {
-        label: "Notifikasi",
-        icon: faBell,
-        link: "/table",
+        label: "Construction",
+        icon: faHardHat,
+        link: "/construction",
         dis: "translate-x-16",
       },
       {
-        label: "Pesan",
-        icon: faMessage,
-        link: "/form",
+        label: "Create",
+        icon: faPlusCircle,
+        link: "/create-project",
         dis: "translate-x-32",
       },
-      {
-        label: "Profile",
-        icon: faUserAlt,
-        link: "/profile",
-        dis: "translate-x-48",
-      },
+      // {
+      //   label: "Profile",
+      //   icon: faUserAlt,
+      //   link: "/profile",
+      //   dis: "translate-x-48",
+      // },
       {
         label: "Keluar",
         icon: faSignOut,
@@ -74,18 +73,16 @@ function Index() {
             className="buttonNavbarBottom"
           >
             <span
-              className={`text-xl z-20 duration-500 ${
-                index === active && "-mt-6 text-white"
-              }`}
+              className={`text-xl z-20 duration-500 ${index === active && "-mt-6 text-white"
+                }`}
             >
               <FontAwesomeIcon icon={menu.icon} />
             </span>
             <span
-              className={`text-xs font-semibold ${
-                active === index
-                  ? "translate-y-5 duration-500 opacity-100"
-                  : "opacity-0 translate-y-10"
-              }`}
+              className={`text-xs font-semibold ${active === index
+                ? "translate-y-5 duration-500 opacity-100"
+                : "opacity-0 translate-y-10"
+                }`}
             >
               {menu.label}
             </span>
