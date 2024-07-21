@@ -7,12 +7,14 @@ import SidebarLogo from "./SidebarLogo.jsx";
 import SidebarSearch from "./SidebarSearch.jsx";
 import MenuList from "./MenuList.jsx";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContext.js";
 
 function Sidebar({ ...props }) {
   const navigate = useNavigate();
   const [menus, setMenus] = useState(initMenus);
   const [scButton, setScButton] = useState(false);
   const search = useRef("");
+  const { setRefeshLogin } = useAuthContext()
 
   const handleChange = (e) => {
     if (e.target.value) {
@@ -36,6 +38,7 @@ function Sidebar({ ...props }) {
 
   const logout = () => {
     localStorage.clear()
+    setRefeshLogin(prev => !prev);
     navigate("/auth/login");
   };
 

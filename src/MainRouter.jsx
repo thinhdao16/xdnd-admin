@@ -44,16 +44,9 @@ function MainRouter(props) {
                         <Route path="/form" element={<Form />}></Route>
                         <Route path="/profile" element={<Blank />}></Route>
                     </Route>
-                    <Route path="/auth" element={<GuestLayout />}>
-                        <Route path="/auth/login" element={<Login />}></Route>
-                        <Route path="/auth/register" element={<RegisterIndex />}></Route>
-                    </Route>
                 </>
             )
-
             }
-
-
         </Routes>
     )
 }

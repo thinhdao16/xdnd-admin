@@ -12,24 +12,32 @@ function LoginIndex() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { setRefeshLogin } = useAuthContext()
+  const isValidCredentials = (email, password) => {
+    // Danh sách các cặp email và mật khẩu hợp lệ
+    const validCredentials = [
+      { email: "admin", password: "admin@xdnd123" },
+      { email: "Admin", password: "Admin@xdnd123" }
+    ];
+
+    // Kiểm tra xem cặp email và mật khẩu có tồn tại trong danh sách hợp lệ không
+    return validCredentials.some(cred => cred.email === email && cred.password === password);
+  };
+
   const handleSubmit = () => {
     setError(false);
-    console.log(email);
-    console.log(password);
     setLoading(true);
 
-    if (email === "admin" && password === "admin@xdnd123") {
-      localStorage.setItem("token", "abcdefghijklmnopqrstuvwxyzABC")
-      message.success("Đăng nhập thành công")
+    if (isValidCredentials(email, password)) {
+      localStorage.setItem("token", "abcdefghijklmnopqrstuvwxyzABC");
+      message.success("Đăng nhập thành công");
+      setRefeshLogin(prev => !prev);
       navigate("/");
-      setRefeshLogin((prev) => !prev);
-    }
-    else {
+    } else {
       setLoading(false);
-      console.log("first")
-      message.error("Hãy nhập đúng tài khoản, mật khẩu")
+      message.error("Hãy nhập đúng tài khoản, mật khẩu");
     }
   };
+
   const LoginImage =
     "https://static.vecteezy.com/system/resources/previews/019/872/884/non_2x/3d-minimal-user-login-page-user-authentication-concept-user-verification-concept-login-page-with-a-fingerprint-padlock-3d-illustration-free-png.png";
   return (

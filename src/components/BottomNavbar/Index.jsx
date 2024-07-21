@@ -37,12 +37,7 @@ function Index() {
       //   link: "/profile",
       //   dis: "translate-x-48",
       // },
-      {
-        label: "Keluar",
-        icon: faSignOut,
-        link: "/auth/login",
-        dis: "translate-x-64",
-      },
+
     ],
     []
   );
