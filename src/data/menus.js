@@ -4,21 +4,25 @@ import {
 
 const initMenu = [
   {
-    label: "Các thiết kế",
+    label: "Mẫu nhà đẹp",
     path: "/",
     icon: faTachometer,
   },
   {
-    label: "Các dự án",
+    label: "Cẩm nang",
     path: "/construction",
     icon: faTachometer,
   },
   {
-    label: "Tạo dự án",
+    label: "Tạo mẫu nhà",
     path: "/create-project",
     icon: faTachometer,
   },
-
+  {
+    label: "Tạo cẩm nang",
+    path: "/create-handbook",
+    icon: faTachometer,
+  },
   // {
   //   label: "Blank",
   //   path: "/blank",

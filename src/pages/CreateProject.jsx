@@ -22,7 +22,7 @@ function CreateProject() {
     const [year, setYear] = useState()
     const [types, setTypes] = useState()
     const [loading, setLoading] = useState(false)
-
+    const [lanConstruction, setLanConstruction] = useState()
     const handleCreateXdndProject = async () => {
         try {
             if (!landArea || !title || !description || !costConstruction || !location || !totalArea || !typeConstruction || !year || !types || images.length === 0) {
@@ -47,6 +47,7 @@ function CreateProject() {
             formData.append('costConstruction', costConstruction);
             formData.append('location', location);
             formData.append('totalArea', totalArea);
+            formData.append('landConstruction', lanConstruction);
             formData.append('typeConstruction', typeConstruction);
             formData.append('year', year);
             formData.append('type', types);
@@ -54,7 +55,7 @@ function CreateProject() {
                 formData.append('img', arrayImg[i]);
             }
 
-            const response = await axios.post('https://fhomebe.onrender.com/createXdndProject', formData, {
+            const response = await axios.post('http://localhost:5000/createXdndProject', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data' // Đặt header 'Content-Type' là 'multipart/form-data' cho FormData
                 }
@@ -84,9 +85,6 @@ function CreateProject() {
     const handleRemoveImage = (id) => {
         setImages(images.filter((image) => image.id !== id));
     };
-
-
-
 
     return (
         <>
@@ -184,7 +182,22 @@ function CreateProject() {
                                     onChange={(e) => setTotalArea(e.target.value)}
 
                                 />
-                            </div>    <div>
+                            </div>
+                            <div>
+                                <label htmlFor="defaultInput" className="text-sm text-gray-600">
+                                    Diện tích xây dựng
+                                </label>
+                                <input
+                                    id="defaultInput"
+                                    type="text"
+                                    name="defaultInput"
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Default Input"
+                                    onChange={(e) => setLanConstruction(e.target.value)}
+
+                                />
+                            </div>
+                            <div>
                                 <label htmlFor="defaultInput" className="text-sm text-gray-600">
                                     Loại công trình
                                 </label>
@@ -215,15 +228,16 @@ function CreateProject() {
                             </div>
                             <div class="">
                                 <label htmlFor="defaultInput" className="text-sm text-gray-600">
-                                    Loại dự án
+                                    Loại mẫu nhà
                                 </label>
                                 <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     value={types}
                                     onChange={(e) => setTypes(e.target.value)}
                                 >
                                     <option value="" selected>Chọn loại dự án</option>
-                                    <option value="design">Các thiết kế</option>
-                                    <option value="construction">Công trình thực tế</option>
+                                    <option value="gardenHouse">Nhà vườn đẹp</option>
+                                    <option value="townHouse">Nhà Phố đẹp</option>
+                                    <option value="villa">Biệt thự đẹp</option>
                                 </select>
                             </div>
                             <div className="flex flex-col gap-2">

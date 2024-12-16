@@ -7,6 +7,12 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import Navbar from "../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 
+const buttons = [
+  { id: "gardenHouse", label: "Nhà vườn đẹp" },
+  { id: "townHouse", label: "Nhà phố đẹp" },
+  { id: "villa", label: "Biệt thự đẹp" },
+];
+
 function Dashboard() {
 
   const { dataXdndDesign, setDataXdndDesign } = useAuthContext()
@@ -27,12 +33,15 @@ function Dashboard() {
     costConstruction: '',
     location: '',
     totalArea: '',
+    landConstruction: '',
     typeConstruction: '',
     year: '',
     types: '',
     landArea: ''
   });
-  console.log(formFields)
+
+  const [activeButton, setActiveButton] = useState("gardenHouse");
+
   const handleOpenEdit = (data) => {
     setDataItem(data)
     setOpen(true)
@@ -73,7 +82,7 @@ function Dashboard() {
         const formData = new FormData();
         images.map((img) => formData.append('img', img.file));
         const uploadResponse = await axios.post(
-          'https://fhomebe.onrender.com/createXdndProject',
+          'http://localhost:5000/createXdndProject',
           formData, {
           headers: {
             'Content-Type': 'multipart/form-data' // Đặt header 'Content-Type' là 'multipart/form-data' cho FormData
@@ -84,7 +93,7 @@ function Dashboard() {
         groupImg = [...groupImg, ...uploadResponse.data.data.postings.img];
       }
       const responseEdit = await axios.put(
-        `https://f-home-be.vercel.app/edit-xdnd-project/${dataItem?._id}`,
+        `http://localhost:5000/edit-xdnd-project/${dataItem?._id}`,
         {
           title: formFields?.title,
           description: formFields?.description,
@@ -114,7 +123,7 @@ function Dashboard() {
   const handleDelete = async (data) => {
     try {
       setLoading(true)
-      const response = await axios.delete(`https://f-home-be.vercel.app/delete-xdnd-project/${data}`);
+      const response = await axios.delete(`http://localhost:5000/delete-xdnd-project/${data}`);
       if (response.status === 200) {
         setReload((prev) => prev + 1);
         setLoading(false)
@@ -127,6 +136,22 @@ function Dashboard() {
       console.error('Error deleting item:', error);
       setLoading(false)
 
+    }
+  };
+
+  const handleClick = async (id) => {
+    console.log(id)
+    setActiveButton(id);
+    setLoading(true)
+    try {
+      const response = await axios.post('http://localhost:5000/getXdndProject', {
+        type: activeButton
+      });
+      setDataXdndDesign(response.data.data.postings);
+      setLoading(false)
+    } catch (error) {
+      console.error(`Error fetching data for ${id}:`, error);
+      setLoading(false)
     }
   };
 
@@ -153,11 +178,11 @@ function Dashboard() {
       setLoading(true)
       try {
         // Thay thế URL_API bằng URL API thực tế của bạn
-        const response = await axios.post('https://f-home-be.vercel.app/getXdndProject', {
-          type: "design"
+        const response = await axios.post('http://localhost:5000/getXdndProject', {
+          type: activeButton
         });
 
-        setDataXdndDesign(response.data.data.postings); // Cập nhật trạng thái trong context
+        setDataXdndDesign(response.data.data.postings);
         setLoading(false)
       } catch (error) {
         console.error('Axios error:', error);
@@ -173,6 +198,21 @@ function Dashboard() {
       <Navbar toggle={sidebarToggle} />
 
       <Spin spinning={loading} fullscreen />
+      <div className="flex flex-wrap items-center justify-center gap-4  ">
+        {buttons.map((button) => (
+          <button
+            key={button.id}
+            onClick={() => handleClick(button.id)}
+            className={`rounded-xl px-8 py-2 font-semibold transition-colors mt-5 ${
+              activeButton === button.id
+                ? "bg-emerald-600 text-white"
+                : "border border-emerald-600 bg-white text-emerald-600 hover:border-0 hover:bg-emerald-600 hover:text-white"
+            }`}
+          >
+            {button.label}
+          </button>
+        ))}
+      </div>
       <main className="h-full">
         {/* Welcome Header */}
         <div className="mainCard">
@@ -338,7 +378,22 @@ function Dashboard() {
                   onChange={handleInputChange}
 
                 />
-              </div>    <div>
+              </div>
+              <div>
+                <label htmlFor="lanConstruction" className="text-sm text-gray-600">
+                  Diện tích xây dựng
+                </label>
+                <input
+                  id="lanConstruction"
+                  type="text"
+                  name="lanConstruction"
+                  value={formFields?.landConstruction}
+                  className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                  placeholder="Default Input"
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div>
                 <label htmlFor="typeConstruction" className="text-sm text-gray-600">
                   Loại công trình
                 </label>
@@ -379,8 +434,9 @@ function Dashboard() {
                   onChange={handleInputChange}
                 >
                   <option value="" selected>Chọn loại dự án</option>
-                  <option value="design">Các thiết kế</option>
-                  <option value="construction">Công trình thực tế</option>
+                  <option value="gardenHouse">Nhà vườn đẹp</option>
+                  <option value="townHouse">Nhà phố đẹp</option>
+                  <option value="villa">Biệt thự đẹp</option>
                 </select>
               </div>
               <div className="flex flex-col gap-2">

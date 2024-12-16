@@ -12,6 +12,7 @@ import RegisterIndex from './pages/auth/Register';
 import CreateProject from './pages/CreateProject';
 import { useAuthContext } from './context/AuthContext';
 import Construction from './pages/Construction';
+import CreateHandbook from './pages/CreateHandBook';
 
 function MainRouter(props) {
     const [checkAccessToken, setCheckAccessToken] = useState('');
@@ -21,7 +22,6 @@ function MainRouter(props) {
         const accessToken = localStorage.getItem('token');
         setCheckAccessToken(accessToken);
     }, [refeshLogin]);
-    console.log(checkAccessToken)
     return (
         <Routes>
             {checkAccessToken !== null ? (
@@ -30,6 +30,7 @@ function MainRouter(props) {
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/table" element={<Table />} />
                         <Route path="/create-project" element={<CreateProject />} />
+                        <Route path="/create-handbook" element={<CreateHandbook />} />
                         <Route path="/blank" element={<Blank />} />
                         <Route path="/construction" element={<Construction />} />
                         <Route path="/404" element={<NotFound />} />

@@ -1,121 +1,109 @@
 import React, { useEffect, useState } from "react";
-import { useAuthContext } from "../context/AuthContext";
 import { CiTrash } from "react-icons/ci";
 import axios from "axios";
-import { Modal, Popconfirm, Spin } from "antd";
+import { message, Modal, Popconfirm, Spin } from "antd";
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import Navbar from "../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
+import { Editor } from "@tinymce/tinymce-react";
+
+const buttons = [
+    { id: "design", label: "Thiết kế" },
+    { id: "fengShui", label: "Phong thủy" },
+    { id: "costCaculation", label: "Tính toán chi phí" },
+    { id: "share", label: "Chia sẻ" },
+];
 
 function Construction() {
     const [sidebarToggle] = useOutletContext();
 
-    const { dataXdndDesign, setDataXdndDesign } = useAuthContext()
+    const [dataHandbook, setDataHandbook] = useState([])
     const [dataItem, setDataItem] = useState()
     const [open, setOpen] = useState(false);
     const [images, setImages] = useState([]);
-    const [dataItemImgs, setDataItemImgs] = useState([]);
-    const [dataNewImgBack, setDataNewImgBack] = useState([]);
     const [reload, setReload] = useState(0)
     const [loading, setLoading] = useState(false)
     const [formFields, setFormFields] = useState({
         title: '',
         description: '',
-        costConstruction: '',
-        location: '',
-        totalArea: '',
-        typeConstruction: '',
-        year: '',
         types: '',
-        landArea: ''
+        script: '',
+
     });
-    console.log(formFields)
+    const [activeButton, setActiveButton] = useState("fengShui");
     const handleOpenEdit = (data) => {
         setDataItem(data)
         setOpen(true)
     }
 
     const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        const newImages = files.map((file) => ({
-            id: URL.createObjectURL(file),
-            file: file,
-        }));
-        setImages((prevImages) => [...prevImages, ...newImages]);
+        const file = e.target.files[0]; // Lấy file đầu tiên
+        if (!file) return; // Thoát nếu không có file nào được chọn
+
+        const newImage = {
+            id: Date.now(), // Tạo id duy nhất (có thể dùng uuid nếu cần)
+            preview: URL.createObjectURL(file), // URL để preview ảnh
+            file: file, // Lưu file thực
+        };
+
+        setImages(newImage); // Cập nhật state với đối tượng ảnh
     };
-    const handleRemoveImage = (field, id) => {
-        if (field === "new-img") {
-            setImages(images.filter((image) => image.id !== id));
-        }
-        if (field === "old-img") {
-            setDataItemImgs(dataItemImgs.filter((img) => img !== id));
-        }
+
+
+    const handleRemoveImage = () => {
+        setImages([]);
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(name)
         setFormFields((prevFields) => ({
             ...prevFields,
             [name]: value,
         }));
     };
 
+    const handleInputChangeScript = (name, value) => {
+        setFormFields((prevFields) => ({
+            ...prevFields,
+            [name]: value,
+        }));
+    };
     const handleEdit = async () => {
         try {
-            let groupImg = [...dataNewImgBack, ...dataItemImgs];
             setLoading(true)
-
-            if (images.length > 0) {
-                const formData = new FormData();
-                images.map((img) => formData.append('img', img.file));
-                const uploadResponse = await axios.post(
-                    'https://f-home-be.vercel.app/createXdndProject',
-                    formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data' // Đặt header 'Content-Type' là 'multipart/form-data' cho FormData
-                    }
+            const formData = new FormData();
+            const imgFormData = images?.file || images
+            formData.append('img', imgFormData)
+            formData.append("title", formFields?.title)
+            formData.append("description", formFields?.description)
+            formData.append("type", formFields?.types)
+            formData.append("script", formFields?.script)
+            const uploadResponse = await axios.put(
+                `http://localhost:5000/edit-handbook/${dataItem?._id}`,
+                formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
-                );
-                setDataNewImgBack(uploadResponse.data.data.postings.img);
-                groupImg = [...groupImg, ...uploadResponse.data.data.postings.img];
             }
-            const responseEdit = await axios.put(
-                `https://fhomebe.onrender.com/edit-xdnd-project/${dataItem?._id}`,
-                {
-                    title: formFields?.title,
-                    description: formFields?.description,
-                    landArea: formFields?.landArea,
-                    costConstruction: formFields?.costConstruction,
-                    location: formFields?.location,
-                    totalArea: formFields?.totalArea,
-                    typeConstruction: formFields?.typeConstruction,
-                    img: groupImg,
-                    year: formFields?.year,
-                    type: formFields?.types
-                }
             );
-
-            console.log(responseEdit);
+            message.success(uploadResponse?.data?.message)
             setOpen(false)
             setReload((prev) => prev + 1)
             setLoading(false)
-
         } catch (error) {
             console.error('Error editing project:', error);
             setLoading(false)
-
         }
     };
 
     const handleDelete = async (data) => {
         try {
             setLoading(true)
-            const response = await axios.delete(`https://f-home-be.vercel.app/delete-xdnd-project/${data}`);
+            const response = await axios.delete(`http://localhost:5000/delete-handbook/${data}`);
             if (response.status === 200) {
                 setReload((prev) => prev + 1);
                 setLoading(false)
-                console.log('Item deleted successfully');
+                message.success('Item deleted successfully');
             } else {
                 console.error('Failed to delete item', response.status);
                 setLoading(false)
@@ -127,20 +115,29 @@ function Construction() {
         }
     };
 
+    const handleClick = async (id) => {
+        setActiveButton(id);
+        setLoading(true)
+        try {
+            const response = await axios.post('http://localhost:5000/get-handbook', {
+                type: id
+            });
+            setDataHandbook(response.data.data);
+            setLoading(false)
+        } catch (error) {
+            console.error(`Error fetching data for ${id}:`, error);
+            setLoading(false)
+        }
+    };
     useEffect(() => {
         if (open) {
             setFormFields({
                 title: dataItem?.title || '',
                 description: dataItem?.description || '',
-                costConstruction: dataItem?.costConstruction || '',
-                location: dataItem?.location || '',
-                totalArea: dataItem?.totalArea || '',
-                typeConstruction: dataItem?.typeConstruction || '',
-                year: dataItem?.year || '',
                 types: dataItem?.type || '',
-                landArea: dataItem?.landArea || '',
+                script: dataItem?.script || ''
             });
-            setDataItemImgs(dataItem?.img);
+            setImages(dataItem?.img);
         }
     }, [open, dataItem]);
 
@@ -150,11 +147,11 @@ function Construction() {
             setLoading(true)
             try {
                 // Thay thế URL_API bằng URL API thực tế của bạn
-                const response = await axios.post('https://f-home-be.vercel.app/getXdndProject', {
-                    type: "construction"
+                const response = await axios.post('http://localhost:5000/get-handbook', {
+                    type: activeButton
                 });
 
-                setDataXdndDesign(response.data.data.postings); // Cập nhật trạng thái trong context
+                setDataHandbook(response.data.data);
                 setLoading(false)
             } catch (error) {
                 console.error('Axios error:', error);
@@ -170,6 +167,20 @@ function Construction() {
             <Navbar toggle={sidebarToggle} />
 
             <Spin spinning={loading} fullscreen />
+            <div className="flex flex-wrap items-center justify-center gap-4  ">
+                {buttons.map((button) => (
+                    <button
+                        key={button.id}
+                        onClick={() => handleClick(button.id)}
+                        className={`rounded-xl px-8 py-2 font-semibold transition-colors mt-5 ${activeButton === button.id
+                            ? "bg-emerald-600 text-white"
+                            : "border border-emerald-600 bg-white text-emerald-600 hover:border-0 hover:bg-emerald-600 hover:text-white"
+                            }`}
+                    >
+                        {button.label}
+                    </button>
+                ))}
+            </div>
             <main className="h-full">
                 {/* Welcome Header */}
                 <div className="mainCard">
@@ -177,8 +188,8 @@ function Construction() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                             {
-                                dataXdndDesign?.map((data) => (
-                                    <div className="rounded-2xl shadow-lg relative ">
+                                dataHandbook?.map((data, index) => (
+                                    <div key={index} className="rounded-2xl shadow-lg relative ">
                                         <Popconfirm
                                             title="Delete the task"
                                             description="Are you sure to delete this task?"
@@ -197,30 +208,16 @@ function Construction() {
                                         >
                                             Chỉnh sửa
                                         </button>
-                                        <img src={data?.img[0]} alt="" className="rounded-t-2xl h-72 w-full object-cover" />
+                                        <img src={data?.img} alt="" className="rounded-t-2xl h-72 w-full object-cover" />
                                         <div className="p-4 flex flex-col gap-2">
                                             <span className="font-semibold">
                                                 {data?.title}
                                             </span>
                                             <div className="flex gap-3 flex-wrap">
                                                 <div className="px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-600">
-                                                    {data?.costConstruction}
+                                                    {data?.description}
                                                 </div>
-                                                <div className="px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-600">
-                                                    {data?.landArea}
-                                                </div>
-                                                <div className="px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-600">
-                                                    {data?.location}
-                                                </div>
-                                                <div className="px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-600">
-                                                    {data?.totalArea}
-                                                </div>
-                                                <div className="px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-600">
-                                                    {data?.typeConstruction}
-                                                </div>
-                                                <div className="px-2 py-1 rounded-md text-sm bg-blue-100 text-blue-600">
-                                                    {data?.year}
-                                                </div>
+
                                             </div>
                                             <span>
                                                 {data?.description}
@@ -275,97 +272,8 @@ function Construction() {
                                     onChange={handleInputChange}
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="landArea" className="text-sm text-gray-600">
-                                    Diện tích đất
-                                </label>
-                                <input
-                                    id="landArea"
-                                    type="text"
-                                    name="landArea"
-                                    value={formFields?.landArea}
 
-                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Default Input"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="costConstruction" className="text-sm text-gray-600">
-                                    Chi phí thi công
-                                </label>
-                                <input
-                                    id="costConstruction"
-                                    type="text"
-                                    name="costConstruction"
-                                    value={formFields?.costConstruction}
 
-                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Default Input"
-                                    onChange={handleInputChange}
-
-                                />
-                            </div>    <div>
-                                <label htmlFor="location" className="text-sm text-gray-600">
-                                    Địa điểm
-                                </label>
-                                <input
-                                    id="location"
-                                    type="text"
-                                    name="location"
-                                    value={formFields?.location}
-
-                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Default Input"
-                                    onChange={handleInputChange}
-
-                                />
-                            </div>    <div>
-                                <label htmlFor="totalArea" className="text-sm text-gray-600">
-                                    Tổng diện tích sàn
-                                </label>
-                                <input
-                                    id="totalArea"
-                                    type="text"
-                                    name="totalArea"
-                                    value={formFields?.totalArea}
-
-                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Default Input"
-                                    onChange={handleInputChange}
-
-                                />
-                            </div>    <div>
-                                <label htmlFor="typeConstruction" className="text-sm text-gray-600">
-                                    Loại công trình
-                                </label>
-                                <input
-                                    id="typeConstruction"
-                                    type="text"
-                                    name="typeConstruction"
-                                    value={formFields?.typeConstruction}
-
-                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Default Input"
-                                    onChange={handleInputChange}
-
-                                />
-                            </div>    <div>
-                                <label htmlFor="year" className="text-sm text-gray-600">
-                                    Năm thiết kế
-                                </label>
-                                <input
-                                    id="year"
-                                    type="text"
-                                    name="year"
-                                    value={formFields?.year}
-
-                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Default Input"
-                                    onChange={handleInputChange}
-
-                                />
-                            </div>
                             <div class="">
                                 <label htmlFor="types" className="text-sm text-gray-600">
                                     Loại dự án
@@ -376,23 +284,28 @@ function Construction() {
                                     onChange={handleInputChange}
                                 >
                                     <option value="" selected>Chọn loại dự án</option>
-                                    <option value="design">Các thiết kế</option>
-                                    <option value="construction">Công trình thực tế</option>
+                                    <option value="design">Thiết kế</option>
+                                    <option value="fengShui">Phong thủy</option>
+                                    <option value="costCaculation">Tính toán chi phí</option>
+                                    <option value="share">Chia sẻ</option>
                                 </select>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="defaultInput" className="text-sm text-gray-600">
-                                    Hình ảnh hiện tại
-                                </label>
+                                {(images?.preview === undefined || images?.length === 0) && (
+                                    <>
+                                        <label htmlFor="defaultInput" className="text-sm text-gray-600">
+                                            Hình ảnh hiện tại
+                                        </label>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                                    {dataItemImgs?.map((dataImg) => (
-                                        <div key={dataImg} className="image-wrapper relative">
-                                            <img src={dataImg} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
-                                            <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 shadow-2xl flex items-center justify-center " onClick={() => handleRemoveImage("old-img", dataImg)}><CiTrash /></button>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                                            <div key={images} className="image-wrapper relative">
+                                                <img src={images || images?.preview} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
+                                                <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 shadow-2xl flex items-center justify-center " onClick={() => handleRemoveImage()}><CiTrash /></button>
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
+                                    </>
+                                )}
+
                                 <label htmlFor="defaultInput" className="text-sm text-gray-600">
                                     Hình ảnh mới
                                 </label>
@@ -402,17 +315,62 @@ function Construction() {
                                     multiple
                                     onChange={handleImageChange}
                                 />
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3  gap-4">
-                                    {images.map((image) => (
-                                        <div key={image.id} className="image-wrapper relative">
-                                            <img src={image.id} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
-                                            <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 flex items-center justify-center shadow-2xl  " onClick={() => handleRemoveImage("new-img", image.id)}><CiTrash /></button>
-                                        </div>
-                                    ))}
-                                </div>
+                                {images?.preview?.length > 0 && <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3  gap-4">
+                                    <div key={images} className="image-wrapper relative">
+                                        <img src={images?.preview} alt="Uploaded Preview" className="shadow-lg rounded-lg" />
+                                        <button className="absolute top-2 right-4 rounded-full bg-white w-7 h-7 flex items-center justify-center shadow-2xl  " onClick={() => handleRemoveImage()}><CiTrash /></button>
+                                    </div>
+                                </div>}
                             </div>
 
-
+                            <Editor
+                                name="script"
+                                apiKey="iur6gq9lbswln4yu8vfox2ry8w48u37ay2dj65n0o6qzz9rd"
+                                value={formFields?.script}
+                                init={{
+                                    height: 500,
+                                    menubar: true,
+                                    plugins: [
+                                        'advlist autolink lists link image charmap print preview anchor',
+                                        'searchreplace visualblocks code fullscreen',
+                                        'insertdatetime media table paste code help wordcount',
+                                    ],
+                                    toolbar:
+                                        'undo redo | myImageUploadButton | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help | image',
+                                    setup: (editor) => {
+                                        editor.ui.registry.addButton('myImageUploadButton', {
+                                            text: 'Upload Image',
+                                            onAction: () => {
+                                                const input = document.createElement('input');
+                                                input.type = 'file';
+                                                input.accept = 'image/*';
+                                                input.onchange = async (event) => {
+                                                    const file = event.target.files[0];
+                                                    const formData = new FormData();
+                                                    formData.append('img', file);
+                                                    try {
+                                                        setLoading(true);
+                                                        const response = await fetch('http://localhost:5000/postImg', {
+                                                            method: 'POST',
+                                                            body: formData,
+                                                        });
+                                                        const data = await response.json();
+                                                        editor.insertContent(
+                                                            `<img src="${data?.data?.newImage?.img}" alt="Uploaded Image" />`
+                                                        );
+                                                    } catch (error) {
+                                                        console.error('Error uploading image:', error);
+                                                    } finally {
+                                                        setLoading(false);
+                                                    }
+                                                };
+                                                input.click();
+                                            },
+                                        });
+                                    },
+                                }}
+                                onEditorChange={(newContent) => handleInputChangeScript("script", newContent)}
+                            />
 
                             <div className="mt-6 flex flex-row gap-4">
                                 <button className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm"
