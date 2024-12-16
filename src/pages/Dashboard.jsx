@@ -140,12 +140,11 @@ function Dashboard() {
   };
 
   const handleClick = async (id) => {
-    console.log(id)
     setActiveButton(id);
     setLoading(true)
     try {
       const response = await axios.post('https://fhomebe.onrender.com/getXdndProject', {
-        type: activeButton
+        type: id
       });
       setDataXdndDesign(response.data.data.postings);
       setLoading(false)
